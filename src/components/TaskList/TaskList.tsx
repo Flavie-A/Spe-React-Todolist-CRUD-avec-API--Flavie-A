@@ -7,10 +7,10 @@ interface TaskProps {
   // supprTache: (idInputTache: number) => void;
   submitTask: (tasks: ITask) => void;
   doneTask: (tasks: ITask) => void;
-  setListTasks: React.Dispatch<React.SetStateAction<ITask[]>>;
+  deleteTask: (idInputTask: number) => void;
 }
 
-function TaskList({ tasks, submitTask, doneTask, setListTasks }: TaskProps) {
+function TaskList({ tasks, submitTask, doneTask, deleteTask }: TaskProps) {
   return (
     <ul className="list">
       {tasks.map((task) => (
@@ -20,7 +20,7 @@ function TaskList({ tasks, submitTask, doneTask, setListTasks }: TaskProps) {
           // supprTache={supprTache}
           submitTask={submitTask}
           doneTask={doneTask}
-          setListTasks={setListTasks}
+          deleteTask={deleteTask}
         />
       ))}
     </ul>

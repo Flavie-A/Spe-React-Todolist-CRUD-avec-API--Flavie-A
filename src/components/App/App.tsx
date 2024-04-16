@@ -59,15 +59,22 @@ function App() {
         return {
           ...task,
           label: submittedTask.label,
+          done: submittedTask.done,
         };
       } else {
         return task;
       }
     });
-
     setListTasks(newSubmittedTask);
   };
-  console.log(listTasks);
+
+  const deleteTask = (idInputTache: number) => {
+    const newListAfterDelete = listTasks.filter(
+      (listTasks) => listTasks.id !== idInputTache
+    );
+    setListTasks(newListAfterDelete);
+  };
+
   return (
     <div className="app">
       <Form
@@ -80,7 +87,7 @@ function App() {
         tasks={listTasks}
         doneTask={doneTask}
         submitTask={submitTask}
-        setListTasks={setListTasks}
+        deleteTask={deleteTask}
       />
     </div>
   );

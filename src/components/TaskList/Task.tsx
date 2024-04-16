@@ -5,13 +5,12 @@ import ITask from '../../@types/task';
 
 interface TaskProps {
   task: ITask;
-  // supprTache: (idInputTache: number) => void;
+  deleteTask: (idInputTache: number) => void;
   doneTask: (tasks: ITask) => void;
   submitTask: (tasks: ITask) => void;
-  setListTasks: (value: React.SetStateAction<ITask[]>) => void;
 }
 
-function Task({ task, submitTask, doneTask, setListTasks }: TaskProps) {
+function Task({ task, submitTask, doneTask, deleteTask }: TaskProps) {
   const [isModeEdit, setIsModeEdit] = useState(false);
   const [newLabel, setnewLabel] = useState(task.label);
   const submittedTask = {
@@ -75,7 +74,13 @@ function Task({ task, submitTask, doneTask, setListTasks }: TaskProps) {
         )}
       </label>
 
-      <button type="button" className="item-delete">
+      <button
+        type="button"
+        className="item-delete"
+        onClick={() => {
+          deleteTask(task.id);
+        }}
+      >
         <Trash2 />
       </button>
 
