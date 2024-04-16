@@ -2,7 +2,7 @@ import './Form.scss';
 // import { Check, Trash, Edit } from 'react-feather';
 
 interface FormProps {
-  addtNewTask: (inputNewTask: string) => void;
+  addtNewTask: (inputValue: string) => Promise<void>;
   setInputNewTask: React.Dispatch<React.SetStateAction<string>>;
   inputNewTask: string;
 }

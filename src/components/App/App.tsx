@@ -20,6 +20,17 @@ function App() {
     setListTasks(ListeTachesApi);
   };
 
+  // --- ADD NEW TASK API ---
+  const addTaskToBackAndState = async (inputValue: string) => {
+    // on envoie la nouvelle tache au back
+    const result = await axios.post('http://localhost:3000/tasks', {
+      label: inputNewTask,
+      done: false,
+    });
+    // on mets à jour le state avec la liste renvoyée par le back qui contient la nouvelle tache
+    setListTasks([...result.data]);
+  };
+
   useEffect(() => {
     fetchTasks();
   }, []);
@@ -78,7 +89,7 @@ function App() {
   return (
     <div className="app">
       <Form
-        addtNewTask={addtNewTask}
+        addtNewTask={addTaskToBackAndState}
         inputNewTask={inputNewTask}
         setInputNewTask={setInputNewTask}
       />
