@@ -1,7 +1,17 @@
 import './Counter.scss';
+// import { memo } from 'react';
 
-function Counter() {
-  return <p className="counter">1 tâche(s) en cours</p>;
+interface CounterProps {
+  countTasks: number;
+}
+
+function Counter({ countTasks }: CounterProps) {
+  return (
+    <p className="counter">
+      {countTasks} tâche{countTasks > 1 && 's'} terminée
+      {countTasks > 1 && 's'}
+    </p>
+  );
 }
 
 export default Counter;

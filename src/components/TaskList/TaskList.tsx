@@ -1,12 +1,24 @@
 import Task from './Task';
 import './TaskList.scss';
+import ITasks from '../../@types/task';
 
-function TaskList() {
+interface TaskProps {
+  tasks: ITasks[];
+  // supprTache: (idInputTache: number) => void;
+  editTask: (tasks: ITasks) => void;
+}
+
+function TaskList({ tasks, editTask }: TaskProps) {
   return (
     <ul className="list">
-      <Task />
-      <Task />
-      <Task />
+      {tasks.map((task) => (
+        <Task
+          key={task.id}
+          task={task}
+          // supprTache={supprTache}
+          editTask={editTask}
+        />
+      ))}
     </ul>
   );
 }
