@@ -1,14 +1,16 @@
 import Task from './Task';
 import './TaskList.scss';
-import ITasks from '../../@types/task';
+import ITask from '../../@types/task';
 
 interface TaskProps {
-  tasks: ITasks[];
+  tasks: ITask[];
   // supprTache: (idInputTache: number) => void;
-  editTask: (tasks: ITasks) => void;
+  submitTask: (tasks: ITask) => void;
+  doneTask: (tasks: ITask) => void;
+  setListTasks: React.Dispatch<React.SetStateAction<ITask[]>>;
 }
 
-function TaskList({ tasks, editTask }: TaskProps) {
+function TaskList({ tasks, submitTask, doneTask, setListTasks }: TaskProps) {
   return (
     <ul className="list">
       {tasks.map((task) => (
@@ -16,7 +18,9 @@ function TaskList({ tasks, editTask }: TaskProps) {
           key={task.id}
           task={task}
           // supprTache={supprTache}
-          editTask={editTask}
+          submitTask={submitTask}
+          doneTask={doneTask}
+          setListTasks={setListTasks}
         />
       ))}
     </ul>

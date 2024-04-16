@@ -11,7 +11,7 @@ import './App.scss';
 
 function App() {
   const [listTasks, setListTasks] = useState<ITask[]>([]);
-  const [inputNewTask, setInputNewTask] = useState<ITask['label']>('');
+  const [inputNewTask, setInputNewTask] = useState('');
 
   const fetchTasks = async () => {
     const resultFetch = await axios.get('http://localhost:3000/tasks');
@@ -39,8 +39,8 @@ function App() {
 
   const countTasks = listTasks.filter((tasks) => tasks.done).length;
 
-  const editTask = (tasks: ITask) => {
-    const newEditedTask = listTasks.map((task) => {
+  const doneTask = (tasks: ITask) => {
+    const newDoneTask = listTasks.map((task) => {
       if (task.id === tasks.id) {
         return {
           ...task,
@@ -50,9 +50,24 @@ function App() {
         return task;
       }
     });
-    setListTasks(newEditedTask);
+    setListTasks(newDoneTask);
   };
 
+  const submitTask = (submittedTask: ITask) => {
+    const newSubmittedTask = listTasks.map((task) => {
+      if (task.id === submittedTask.id) {
+        return {
+          ...task,
+          label: submittedTask.label,
+        };
+      } else {
+        return task;
+      }
+    });
+
+    setListTasks(newSubmittedTask);
+  };
+  console.log(listTasks);
   return (
     <div className="app">
       <Form
@@ -61,7 +76,12 @@ function App() {
         setInputNewTask={setInputNewTask}
       />
       <Counter countTasks={countTasks} />
-      <TaskList tasks={listTasks} editTask={editTask} />
+      <TaskList
+        tasks={listTasks}
+        doneTask={doneTask}
+        submitTask={submitTask}
+        setListTasks={setListTasks}
+      />
     </div>
   );
 }
