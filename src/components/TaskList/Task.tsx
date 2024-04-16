@@ -5,19 +5,14 @@ import ITask from '../../@types/task';
 
 interface TaskProps {
   task: ITask;
-  deleteTask: (idInputTache: number) => void;
-  doneTask: (tasks: ITask) => void;
-  submitTask: (tasks: ITask) => void;
+  deleteTask: (taskId: number) => Promise<void>;
+  updateTask: (taskToUpdate: ITask) => Promise<void>;
 }
 
-function Task({ task, submitTask, doneTask, deleteTask }: TaskProps) {
+function Task({ task, updateTask, deleteTask }: TaskProps) {
   const [isModeEdit, setIsModeEdit] = useState(false);
   const [newLabel, setnewLabel] = useState(task.label);
-  const submittedTask = {
-    id: task.id,
-    label: newLabel,
-    done: task.done,
-  };
+
   return (
     <li className="item" key={task.label}>
       <label
@@ -28,13 +23,14 @@ function Task({ task, submitTask, doneTask, deleteTask }: TaskProps) {
           type="checkbox"
           checked={task.done}
           onChange={() => {
-            const newTaskDone = {
+            const updateDone = {
               id: task.id,
               label: task.label,
               done: !task.done,
             };
-
-            doneTask(newTaskDone);
+            updateTask(updateDone);
+            // on peut aussi écrire comme ça :
+            // updateTask({ ...task, done: !task.done });
           }}
         />
 
@@ -45,8 +41,13 @@ function Task({ task, submitTask, doneTask, deleteTask }: TaskProps) {
               onSubmit={(event) => {
                 event.preventDefault();
 
-                submitTask(submittedTask);
-
+                const updateLabel = {
+                  id: task.id,
+                  label: newLabel,
+                  done: task.done,
+                };
+                updateTask(updateLabel);
+                // updateTask({ ...task, label: newLabel });
                 setIsModeEdit(false);
               }}
             >
@@ -62,7 +63,12 @@ function Task({ task, submitTask, doneTask, deleteTask }: TaskProps) {
               className="item-delete"
               type="button"
               onClick={() => {
-                submitTask(submittedTask);
+                const updateLabel = {
+                  id: task.id,
+                  label: newLabel,
+                  done: task.done,
+                };
+                updateTask(updateLabel);
                 setIsModeEdit(false);
               }}
             >

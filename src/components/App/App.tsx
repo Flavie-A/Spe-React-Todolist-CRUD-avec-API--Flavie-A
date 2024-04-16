@@ -15,76 +15,109 @@ function App() {
 
   const fetchTasks = async () => {
     const resultFetch = await axios.get('http://localhost:3000/tasks');
-    console.log(resultFetch);
+    // console.log(resultFetch);
     const ListeTachesApi = resultFetch.data;
     setListTasks(ListeTachesApi);
   };
 
   // --- ADD NEW TASK API ---
-  const addTaskToBackAndState = async (inputValue: string) => {
+  const addTaskToBackAndState = async (inputNewTask: string) => {
     // on envoie la nouvelle tache au back
-    const result = await axios.post('http://localhost:3000/tasks', {
+    const envoi = await axios.post('http://localhost:3000/tasks', {
       label: inputNewTask,
       done: false,
     });
     // on mets à jour le state avec la liste renvoyée par le back qui contient la nouvelle tache
-    setListTasks([...result.data]);
+    setListTasks([...envoi.data]);
+  };
+
+  // --- DELETE TASK --
+  const deleteTaskToBackAndState = async (taskId: number) => {
+    // on supprime la tache coté back
+    const suppression = await axios.delete(
+      `http://localhost:3000/tasks/${taskId}`
+    );
+    // et on met à jour la liste dans le state
+    setListTasks([...suppression.data]);
+  };
+
+  // --- UPDATE TASK --
+  const updateTaskToBackAndState = async (taskToUpdate: ITask) => {
+    console.log(taskToUpdate);
+    // on modifie la tache coté back
+    const tache = await axios.put(
+      `http://localhost:3000/tasks/${taskToUpdate.id}`,
+      taskToUpdate
+    );
+    // on met à jour la tache dans le state
+    const updatedTask = listTasks.map((task) =>
+      task.id === taskToUpdate.id ? taskToUpdate : task
+    );
+    setListTasks(updatedTask);
   };
 
   useEffect(() => {
     fetchTasks();
   }, []);
 
-  const addtNewTask = (inputNewTask: string) => {
-    const idNewTask = Math.max(...listTasks.map((task) => task.id)) + 1;
-
-    const newTask = {
-      id: idNewTask,
-      label: inputNewTask,
-      done: false,
-    };
-
-    const newListTasks = [...listTasks, newTask];
-    setListTasks(newListTasks);
-  };
-
   const countTasks = listTasks.filter((tasks) => tasks.done).length;
 
-  const doneTask = (tasks: ITask) => {
-    const newDoneTask = listTasks.map((task) => {
-      if (task.id === tasks.id) {
-        return {
-          ...task,
-          done: !task.done,
-        };
-      } else {
-        return task;
-      }
-    });
-    setListTasks(newDoneTask);
-  };
+  //si on envoie vers l'API ça sert plus à rien :
+  // const addtNewTask = (inputNewTask: string) => {
+  //   const idNewTask = Math.max(...listTasks.map((task) => task.id)) + 1;
 
-  const submitTask = (submittedTask: ITask) => {
-    const newSubmittedTask = listTasks.map((task) => {
-      if (task.id === submittedTask.id) {
-        return {
-          ...task,
-          label: submittedTask.label,
-          done: submittedTask.done,
-        };
-      } else {
-        return task;
-      }
-    });
-    setListTasks(newSubmittedTask);
-  };
+  //   const newTask = {
+  //     id: idNewTask,
+  //     label: inputNewTask,
+  //     done: false,
+  //   };
 
-  const deleteTask = (idInputTache: number) => {
-    const newListAfterDelete = listTasks.filter(
-      (listTasks) => listTasks.id !== idInputTache
-    );
-    setListTasks(newListAfterDelete);
-  };
+  //   const newListTasks = [...listTasks, newTask];
+  //   setListTasks(newListTasks);
+  // };
+
+  // const updateTask = (taskToUpdate: ITask) => {
+  //   const updatedTask = listTasks.map((task) =>
+  //     task.id === taskToUpdate.id ? taskToUpdate : task
+  //   );
+  //   setListTasks(updatedTask);
+  // };
+
+  // Décomposition de update avec done et submit
+  // const doneTask = (tasks: ITask) => {
+  //   const newDoneTask = listTasks.map((task) => {
+  //     if (task.id === tasks.id) {
+  //       return {
+  //         ...task,
+  //         done: !task.done,
+  //       };
+  //     } else {
+  //       return task;
+  //     }
+  //   });
+  //   setListTasks(newDoneTask);
+  // };
+  // const submitTask = (submittedTask: ITask) => {
+  //   const newSubmittedTask = listTasks.map((task) => {
+  //     if (task.id === submittedTask.id) {
+  //       return {
+  //         ...task,
+  //         label: submittedTask.label,
+  //         done: submittedTask.done,
+  //       };
+  //     } else {
+  //       return task;
+  //     }
+  //   });
+  //   setListTasks(newSubmittedTask);
+  // };
+
+  // const deleteTask = (idInputTache: number) => {
+  //   const newListAfterDelete = listTasks.filter(
+  //     (listTasks) => listTasks.id !== idInputTache
+  //   );
+  //   setListTasks(newListAfterDelete);
+  // };
 
   return (
     <div className="app">
@@ -96,9 +129,8 @@ function App() {
       <Counter countTasks={countTasks} />
       <TaskList
         tasks={listTasks}
-        doneTask={doneTask}
-        submitTask={submitTask}
-        deleteTask={deleteTask}
+        updateTask={updateTaskToBackAndState}
+        deleteTask={deleteTaskToBackAndState}
       />
     </div>
   );
