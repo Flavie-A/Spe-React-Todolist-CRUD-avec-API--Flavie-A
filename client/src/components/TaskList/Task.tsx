@@ -27,6 +27,9 @@ function Task({ task, updateTask, deleteTask }: TaskProps) {
               id: task.id,
               label: task.label,
               done: !task.done,
+              priority: task.priority,
+              comment: task.comment,
+              category_id:1,
             };
             updateTask(updateDone);
             // on peut aussi écrire comme ça :
@@ -45,6 +48,8 @@ function Task({ task, updateTask, deleteTask }: TaskProps) {
                   id: task.id,
                   label: newLabel,
                   done: task.done,
+                  priority: task.priority,
+                  comment: task.comment,
                 };
                 updateTask(updateLabel);
                 // updateTask({ ...task, label: newLabel });
@@ -67,6 +72,8 @@ function Task({ task, updateTask, deleteTask }: TaskProps) {
                   id: task.id,
                   label: newLabel,
                   done: task.done,
+                  priority: task.priority,
+                  comment: task.comment
                 };
                 updateTask(updateLabel);
                 setIsModeEdit(false);
