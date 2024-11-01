@@ -4,15 +4,14 @@ const router = require('./router.js');
 
 const app = express();
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
+// app.use(express.json());
 app.use(cors());
 
-app.get('/', (req, res) => {
-  res.send('API running. Go to /tasks or /categories endpoints.');
-});
+// app.get('/', (req, res) => {
+//   res.send('API running. Aller vers /tasks ou /categories endpoints.');
+// });
 
-// Utilisation des routes
 app.use(router);
 
 app.listen(3000, () => {

@@ -1,54 +1,52 @@
-// controllers/taskController.js
-const dataMapper = require('../datamapper.js');
+const TaskModel = require('../models/taskModel');
 
 const TaskController = {
-  getAll: async (req, res) => {
+  getAll: async (request, response) => {
     try {
-      const tasks = await dataMapper.getAllTasks();
-      res.json(tasks);
+      const tasks = await TaskModel.getAll();
+      response.json(tasks);
     } catch (error) {
-            console.error('Error fetching tasks:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+      response.json({ error: 'Aucune tâche trouvée' });
+    }
+  },
+  
+  create: async (request, response) => {
+    try {
+      const { label, done, priority, comment, category_id } = request.body;
+      const newTask = await TaskModel.create(label, done, priority, comment, category_id);
+      response.json(newTask);
+    } catch (error) {
+      response.json({ error: 'La tâche n\'a pas été créée' });
     }
   },
 
-  create: async (req, res) => { 
+  getById: async (request, response) => {
     try {
-    const { label, done, priority, comment, category_id } = req.body;
-      const newTask = await dataMapper.addTask(label, done, priority, comment, category_id );
-      res.status(201).json(newTask);
-    } catch (error) {
-      res.status(400).json({ error: 'Bad Request' });
-    }
-  },
-
-  getById: async (req, res) => {
-    try {
-      const task = await dataMapper.getOneTask(req.params.id);
+      const task = await TaskModel.getOneTask(request.params.id);
       if (!task) {
-        return res.status(404).json({ error: 'Task not found' });
+        return response.json({ error: 'La tâche n\'a pas été trouvée' });
       }
-      res.json(task);
+      response.json(task);
     } catch (error) {
-      res.status(500).json({ error: 'Internal Server Error' });
+      response.json({ error: 'Erreur de requête' });
     }
   },
 
-  update: async (req, res) => {
+  update: async (request, response) => {
     try {
-      const updatedTask = await dataMapper.updateTask(req.params.id, req.body.label, req.body.done,  req.body.priority,  req.body.comment, req.body.category_id);
-      res.json(updatedTask);
+      const updatedTask = await TaskModel.updateTask(request.params.id, request.body.label, request.body.done,  request.body.priority,  request.body.comment, request.body.category_id);
+      response.json(updatedTask);
     } catch (error) {
-      res.status(400).json({ error: 'Bad Request' });
+      response.json({ error: 'La tâche n\'a pas été mise à jour' });
     }
   },
 
-  delete: async (req, res) => {
+  delete: async (request, response) => {
     try {
-      await dataMapper.deleteOneTask(req.params.id);
-      res.status(204).send();
+      await TaskModel.deleteOneTask(request.params.id);
+      response.send();
     } catch (error) {
-      res.status(500).json({ error: 'Internal Server Error' });
+      response.json({ error: 'Erreur de requête' });
     }
   },
 };

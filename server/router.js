@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const CategoryController = require('./controllers/categoryController'); // Assurez-vous du chemin
-const TaskController = require('./controllers/taskController'); // Assurez-vous du chemin
+const CategoryController = require('./controllers/categoryController'); 
+const TaskController = require('./controllers/taskController');
 
 // Routes pour les catégories
 router.get('/categories', CategoryController.getAll);
